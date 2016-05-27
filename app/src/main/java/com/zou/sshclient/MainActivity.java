@@ -1,26 +1,26 @@
 package com.zou.sshclient;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
@@ -61,9 +61,8 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
     private int ctrl,alt;
     private SSHKeyListener connectedkeyListener;
     private View.OnKeyListener unConnectedKeyListener;
-    private AlertDialog.Builder builder;
+    private AlertDialog.Builder connectFailDialog,inputIPAndPortDialog;
     private RelativeLayout rl_keyboard;
-    private float keyboardBaseViewHeight;
     private CharsetDecoder decoder;
 
 
@@ -78,8 +77,25 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
         super.onCreate(savedInstanceState);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void inputIpAndPort() {
-        
+        final View view = View.inflate(this,R.layout.input_ip_port_layout,null);
+        inputIPAndPortDialog = new AlertDialog.Builder(this);
+        inputIPAndPortDialog.setCancelable(false);
+        inputIPAndPortDialog.setTitle("请输入IP和端口");
+        inputIPAndPortDialog.setView(view);
+        inputIPAndPortDialog.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                EditText et_ip = (EditText) view.findViewById(R.id.et_ip);
+                ip = et_ip.getText().toString();
+                EditText et_port = (EditText) view.findViewById(R.id.et_port);
+                port = Integer.parseInt(et_port.getText().toString());
+                sshView.clearTextView();
+                sshView.setDisPlayUsername("请输入用户名：");
+            }
+        });
     }
 
     /**
@@ -106,8 +122,8 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 
     private void initData(){
         decoder = Charset.forName("utf-8").newDecoder();
-        ip = getArguments().getString(BUNDLE_SSH_IP);
-        port = getArguments().getInt(BUNDLE_SSH_PORT);
+//        ip = getArguments().getString(BUNDLE_SSH_IP);
+//        port = getArguments().getInt(BUNDLE_SSH_PORT);
         connectedkeyListener = new SSHKeyListener(this,sshView.buffer,"utf-8");
 //        connectedkeyListener.setOnClearListener(new SSHKeyListener.OnClearListener() {
 //            @Override
@@ -160,7 +176,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                         sshView.addString((String)msg.obj);
                         break;
                     case MSG_CONNECT_FAIL:
-                        builder.show();
+                        connectFailDialog.show();
                         break;
                     case MSG_CONNECTED:
                         sshView.clearTextView();
@@ -196,18 +212,18 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 
     private void initView() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-        builder.setTitle("温馨提示");
-        builder.setMessage("SSH登录失败");
-        builder.setPositiveButton("断开", new DialogInterface.OnClickListener() {
+        connectFailDialog = new AlertDialog.Builder(this);
+        connectFailDialog.setCancelable(false);
+        connectFailDialog.setTitle("温馨提示");
+        connectFailDialog.setMessage("SSH登录失败");
+        connectFailDialog.setPositiveButton("断开", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 onBackPressed();
             }
         });
-        builder.setNegativeButton("再试一次", new DialogInterface.OnClickListener() {
+        connectFailDialog.setNegativeButton("再试一次", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {

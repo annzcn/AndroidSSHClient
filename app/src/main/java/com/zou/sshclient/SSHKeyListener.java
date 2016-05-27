@@ -16,21 +16,17 @@
  */
 package com.zou.sshclient;
 
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Configuration;
-import android.preference.PreferenceManager;
-import android.text.ClipboardManager;
 import android.util.Log;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
 
+import com.zou.sshclient.terminal.VDUBuffer;
+import com.zou.sshclient.terminal.vt320;
+
 import java.io.IOException;
 
-import mud.terminal.VDUBuffer;
-import mud.terminal.vt320;
 
 
 /**
