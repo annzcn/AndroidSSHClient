@@ -611,94 +611,94 @@ public class SSHView extends FrameLayout implements VDUDisplay {
 	}
 
 	// 显示退出VI后的界面
-	private void displayQuitVI() {
-
-		nomalDisplayString.clear();
-		quitVIDisplayString.clear();
-		sshAdapter.setArray(quitVIDisplayString);
-		for (int i = 0; i < disPlayChars.length - 1; i++) {
-			char[] disPlayText = disPlayChars[i];
-			String disPlayString = UIUtils.charsToString(disPlayText);
-
-			SpannableStringBuilder builder = new SpannableStringBuilder(
-					disPlayString);
-			int fgcolor = defaultFg;
-			for (int j = 0; j < disPlayText.length; j++) {
-				char currchar = disPlayText[j];
-				int currAttr = buffer.charAttributes[i][j];
-				// check if foreground color attribute is set
-				if ((currAttr & VDUBuffer.COLOR_FG) != 0) {
-					fgcolor = ((currAttr & VDUBuffer.COLOR_FG) >> VDUBuffer.COLOR_FG_SHIFT) - 1;
-					ForegroundColorSpan colorSpan = new ForegroundColorSpan(
-							color[fgcolor]);
-					builder.setSpan(colorSpan, j, j + 1,
-							Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				}
-				
-			}
-			nomalDisplayString.add(builder);
-		}
-		for (int i = 0; i < saveDisplayString.size(); i++) {
-			quitVIDisplayString.add(saveDisplayString.get(i));
-		}
-		Log.i(TAG,
-				"saveCount------"+saveCount);
-		if(nomalDisplayString.size()<MAX_NOMAL_LINE){
-			for (int i = saveCount; i < nomalDisplayString.size(); i++) {
-				quitVIDisplayString.add(nomalDisplayString.get(i));
-			}
-		}else{
-			for(int i=0;i<saveDisplayString.size();i++){
-				if(nomalDisplayString.get(0).equals(saveDisplayString.get(i))){
-					aboveMaxLineSaveCount = i;
-				}
-			}
-			if(aboveMaxLineSaveCount !=0){
-				for (int i = nomalDisplayString.size() - aboveMaxLineSaveCount; i < nomalDisplayString.size(); i++) {
-					quitVIDisplayString.add(nomalDisplayString.get(i));
-				}
-			}else{
-				quitVIDisplayString.clear();
-				for (int i = saveCount; i < nomalDisplayString.size(); i++) {
-					quitVIDisplayString.add(nomalDisplayString.get(i));
-				}
-				saveDisplayString.clear();
-				for (int i=0;i<quitVIDisplayString.size();i++) {
-					saveDisplayString.add(quitVIDisplayString.get(i));
-				}
-			}
-		}
-		Log.i(TAG,
-				"----------------quitVIDisplayString ------saveDisplayString--------------------start");
-		for (int i = 0; i < saveDisplayString.size(); i++) {
-			Log.i(TAG,
-					"saveDisplayString line" + i + " : "
-							+ saveDisplayString.get(i));
-		}
-		Log.i(TAG,
-				"----------------quitVIDisplayString -------saveDisplayString-------------------end");
-
-		Log.i(TAG,
-				"----------------quitVIDisplayString ------nomalDisplayString--------------------start");
-		
-		for (int i = 0; i < nomalDisplayString.size(); i++) {
-			Log.i(TAG, "nomalDisplayString line" + i + " : "
-					+ nomalDisplayString.get(i));
-		}
-
-		Log.i(TAG,
-				"----------------quitVIDisplayString -------nomalDisplayString-------------------end");
-
-		Log.i(TAG,
-				"----------------quitVIDisplayString --------------------------start");
-		for (int i = 0; i < quitVIDisplayString.size(); i++) {
-			Log.i(TAG, "quitVIDisplayString line" + i + " : "
-					+ quitVIDisplayString.get(i));
-		}
-		Log.i(TAG,
-				"----------------quitVIDisplayString --------------------------end");
-		sshAdapter.notifyDataSetChanged();
-	}
+//	private void displayQuitVI() {
+//
+//		nomalDisplayString.clear();
+//		quitVIDisplayString.clear();
+//		sshAdapter.setArray(quitVIDisplayString);
+//		for (int i = 0; i < disPlayChars.length - 1; i++) {
+//			char[] disPlayText = disPlayChars[i];
+//			String disPlayString = UIUtils.charsToString(disPlayText);
+//
+//			SpannableStringBuilder builder = new SpannableStringBuilder(
+//					disPlayString);
+//			int fgcolor = defaultFg;
+//			for (int j = 0; j < disPlayText.length; j++) {
+//				char currchar = disPlayText[j];
+//				int currAttr = buffer.charAttributes[i][j];
+//				// check if foreground color attribute is set
+//				if ((currAttr & VDUBuffer.COLOR_FG) != 0) {
+//					fgcolor = ((currAttr & VDUBuffer.COLOR_FG) >> VDUBuffer.COLOR_FG_SHIFT) - 1;
+//					ForegroundColorSpan colorSpan = new ForegroundColorSpan(
+//							color[fgcolor]);
+//					builder.setSpan(colorSpan, j, j + 1,
+//							Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//				}
+//
+//			}
+//			nomalDisplayString.add(builder);
+//		}
+//		for (int i = 0; i < saveDisplayString.size(); i++) {
+//			quitVIDisplayString.add(saveDisplayString.get(i));
+//		}
+//		Log.i(TAG,
+//				"saveCount------"+saveCount);
+//		if(nomalDisplayString.size()<MAX_NOMAL_LINE){
+//			for (int i = saveCount; i < nomalDisplayString.size(); i++) {
+//				quitVIDisplayString.add(nomalDisplayString.get(i));
+//			}
+//		}else{
+//			for(int i=0;i<saveDisplayString.size();i++){
+//				if(nomalDisplayString.get(0).equals(saveDisplayString.get(i))){
+//					aboveMaxLineSaveCount = i;
+//				}
+//			}
+//			if(aboveMaxLineSaveCount !=0){
+//				for (int i = nomalDisplayString.size() - aboveMaxLineSaveCount; i < nomalDisplayString.size(); i++) {
+//					quitVIDisplayString.add(nomalDisplayString.get(i));
+//				}
+//			}else{
+//				quitVIDisplayString.clear();
+//				for (int i = saveCount; i < nomalDisplayString.size(); i++) {
+//					quitVIDisplayString.add(nomalDisplayString.get(i));
+//				}
+//				saveDisplayString.clear();
+//				for (int i=0;i<quitVIDisplayString.size();i++) {
+//					saveDisplayString.add(quitVIDisplayString.get(i));
+//				}
+//			}
+//		}
+//		Log.i(TAG,
+//				"----------------quitVIDisplayString ------saveDisplayString--------------------start");
+//		for (int i = 0; i < saveDisplayString.size(); i++) {
+//			Log.i(TAG,
+//					"saveDisplayString line" + i + " : "
+//							+ saveDisplayString.get(i));
+//		}
+//		Log.i(TAG,
+//				"----------------quitVIDisplayString -------saveDisplayString-------------------end");
+//
+//		Log.i(TAG,
+//				"----------------quitVIDisplayString ------nomalDisplayString--------------------start");
+//
+//		for (int i = 0; i < nomalDisplayString.size(); i++) {
+//			Log.i(TAG, "nomalDisplayString line" + i + " : "
+//					+ nomalDisplayString.get(i));
+//		}
+//
+//		Log.i(TAG,
+//				"----------------quitVIDisplayString -------nomalDisplayString-------------------end");
+//
+//		Log.i(TAG,
+//				"----------------quitVIDisplayString --------------------------start");
+//		for (int i = 0; i < quitVIDisplayString.size(); i++) {
+//			Log.i(TAG, "quitVIDisplayString line" + i + " : "
+//					+ quitVIDisplayString.get(i));
+//		}
+//		Log.i(TAG,
+//				"----------------quitVIDisplayString --------------------------end");
+//		sshAdapter.notifyDataSetChanged();
+//	}
 
 	/**
 	 * 连接成功后重绘光标
@@ -747,43 +747,43 @@ public class SSHView extends FrameLayout implements VDUDisplay {
 		invalidate();
 	}
 
-	/**
-	 * 请输入用户名
-	 * 
-	 * @param text
-	 */
-	public void setDisPlayUsername(String text) {
-		displayusername = text;
-		addNewString(displayusername);
-		cursorView.setTranslationX(text.length() * charWidthCN);
-		cursorView.setTranslationY((lineCount - 1) * charHeight);
-		invalidate();
-		timer = new Timer();
-		task = new TimerTask() {
+//	/**
+//	 * 请输入用户名
+//	 *
+//	 * @param text
+//	 */
+//	public void setDisPlayUsername(String text) {
+//		displayusername = text;
+//		addNewString(displayusername);
+//		cursorView.setTranslationX(text.length() * charWidthCN);
+//		cursorView.setTranslationY((lineCount - 1) * charHeight);
+//		invalidate();
+//		timer = new Timer();
+//		task = new TimerTask() {
+//
+//			@Override
+//			public void run() {
+//				Message msg = Message.obtain(handler);
+//				msg.what = MSG_DISPLAY_USERNAME;
+//				msg.sendToTarget();
+//			}
+//		};
+//		timer.schedule(task, 500);
+//
+//	}
 
-			@Override
-			public void run() {
-				Message msg = Message.obtain(handler);
-				msg.what = MSG_DISPLAY_USERNAME;
-				msg.sendToTarget();
-			}
-		};
-		timer.schedule(task, 500);
-
-	}
-
-	/**
-	 * 请输入密码
-	 * 
-	 * @param text
-	 */
-	public void setDisPlayPassword(String text) {
-		displaypassword = text;
-		addNewString(displaypassword);
-		cursorView.setTranslationX(text.length() * charWidthCN);
-		cursorView.setTranslationY((lineCount - 1) * charHeight);
-		invalidate();
-	}
+//	/**
+//	 * 请输入密码
+//	 *
+//	 * @param text
+//	 */
+//	public void setDisPlayPassword(String text) {
+//		displaypassword = text;
+//		addNewString(displaypassword);
+//		cursorView.setTranslationX(text.length() * charWidthCN);
+//		cursorView.setTranslationY((lineCount - 1) * charHeight);
+//		invalidate();
+//	}
 
 	
 	/**
@@ -799,54 +799,54 @@ public class SSHView extends FrameLayout implements VDUDisplay {
 		}
 	}
 	
-	/**
-	 * 输入用户名、密码时调用
-	 * 
-	 * @param text
-	 */
-	public void addDisPlayString(String text) {
-		if (lineCount == 1) {
-			cursorView.setTranslationX(displayusername.length() * charWidthCN
-					+ text.length() * charWidthEN);
-			cursorView.setTranslationY((lineCount - 1) * charHeight);
-			nomalDisplayString.set(0, new SpannableStringBuilder(
-					displayusername + text));
-		} else if (lineCount == 2) {
-			cursorView.setTranslationX(displaypassword.length() * charWidthCN
-					+ text.length() * charWidthEN);
-			cursorView.setTranslationY((lineCount - 1) * charHeight);
-			nomalDisplayString.set(1, new SpannableStringBuilder(
-					displaypassword + text));
-		}
-		sshAdapter.notifyDataSetChanged();
-		invalidate();
-	}
-
-	public void deleteDisPlayChar() {
-		if (lineCount == 1) {
-			if (username != null && username.length() > 0) {
-				username.deleteCharAt(username.length() - 1);
-				cursorView.setTranslationX(cursorView.getTranslationX()
-						- charWidthEN);
-				TextView tv = (TextView) displayListView
-						.getChildAt(lineCount - 1);
-				tv.setText(displayusername
-						+ username.subSequence(0, username.length()));
-			}
-		} else if (lineCount == 2) {
-			if (password != null && password.length() > 0) {
-				password.deleteCharAt(password.length() - 1);
-				cursorView.setTranslationX(cursorView.getTranslationX()
-						- charWidthEN);
-				TextView tv = (TextView) displayListView
-						.getChildAt(lineCount - 1);
-				tv.setText(displaypassword
-						+ password.subSequence(0, password.length()));
-			}
-		}
-
-		invalidate();
-	}
+//	/**
+//	 * 输入用户名、密码时调用
+//	 *
+//	 * @param text
+//	 */
+//	public void addDisPlayString(String text) {
+//		if (lineCount == 1) {
+//			cursorView.setTranslationX(displayusername.length() * charWidthCN
+//					+ text.length() * charWidthEN);
+//			cursorView.setTranslationY((lineCount - 1) * charHeight);
+//			nomalDisplayString.set(0, new SpannableStringBuilder(
+//					displayusername + text));
+//		} else if (lineCount == 2) {
+//			cursorView.setTranslationX(displaypassword.length() * charWidthCN
+//					+ text.length() * charWidthEN);
+//			cursorView.setTranslationY((lineCount - 1) * charHeight);
+//			nomalDisplayString.set(1, new SpannableStringBuilder(
+//					displaypassword + text));
+//		}
+//		sshAdapter.notifyDataSetChanged();
+//		invalidate();
+//	}
+//
+//	public void deleteDisPlayChar() {
+//		if (lineCount == 1) {
+//			if (username != null && username.length() > 0) {
+//				username.deleteCharAt(username.length() - 1);
+//				cursorView.setTranslationX(cursorView.getTranslationX()
+//						- charWidthEN);
+//				TextView tv = (TextView) displayListView
+//						.getChildAt(lineCount - 1);
+//				tv.setText(displayusername
+//						+ username.subSequence(0, username.length()));
+//			}
+//		} else if (lineCount == 2) {
+//			if (password != null && password.length() > 0) {
+//				password.deleteCharAt(password.length() - 1);
+//				cursorView.setTranslationX(cursorView.getTranslationX()
+//						- charWidthEN);
+//				TextView tv = (TextView) displayListView
+//						.getChildAt(lineCount - 1);
+//				tv.setText(displaypassword
+//						+ password.subSequence(0, password.length()));
+//			}
+//		}
+//
+//		invalidate();
+//	}
 
 	public void clearTextView() {
 		if (nomalDisplayString != null) {
@@ -896,36 +896,36 @@ public class SSHView extends FrameLayout implements VDUDisplay {
 		this.onInputTextListener = onInputTextListener;
 	}
 
-	@Override
-	public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-		return new MyInputConnection(this, false);
-	}
+//	@Override
+//	public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+//		return new MyInputConnection(this, false);
+//	}
 
-	/**
-	 * 自定义InputConnection,监听软键盘输入用
-	 */
-	class MyInputConnection extends BaseInputConnection {
-
-		public MyInputConnection(View targetView, boolean fullEditor) {
-			super(targetView, fullEditor);
-		}
-
-		@Override
-		public boolean commitText(CharSequence text, int newCursorPosition) {
-			if (!isConnected) {
-				if (lineCount == 1) {
-					username.append(text);
-					addDisPlayString(username.toString());
-				} else if (lineCount == 2) {
-					password.append(text);
-					addDisPlayString(password.toString());
-				}
-				return true;
-			} else {
-				return super.commitText(text, newCursorPosition);
-			}
-		}
-	}
+//	/**
+//	 * 自定义InputConnection,监听软键盘输入用
+//	 */
+//	class MyInputConnection extends BaseInputConnection {
+//
+//		public MyInputConnection(View targetView, boolean fullEditor) {
+//			super(targetView, fullEditor);
+//		}
+//
+//		@Override
+//		public boolean commitText(CharSequence text, int newCursorPosition) {
+//			if (!isConnected) {
+//				if (lineCount == 1) {
+//					username.append(text);
+//					addDisPlayString(username.toString());
+//				} else if (lineCount == 2) {
+//					password.append(text);
+//					addDisPlayString(password.toString());
+//				}
+//				return true;
+//			} else {
+//				return super.commitText(text, newCursorPosition);
+//			}
+//		}
+//	}
 
 	public class DisplayListView extends ListView {
 

@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -39,10 +38,7 @@ import java.nio.charset.CoderResult;
 
 public class MainActivity extends Activity implements View.OnClickListener,SSHView.OnInputTextListener{
     private static final String TAG ="RemoteSSHUI" ;
-    private View mView;
-    public static final String BUNDLE_SSH_IP = "bundle_ssh_ip";
-    public static final String BUNDLE_SSH_PORT = "bundle_ssh_port";
-    private String ip;
+    private String ip,username,password;
     private int port;
     private SSHView sshView;
     private Session session = null;
@@ -59,8 +55,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
     private Button ssh_key_f1,ssh_key_f2,ssh_key_f3,ssh_key_f4,ssh_key_f5,ssh_key_f6,ssh_key_f7,ssh_key_f8,ssh_key_f9,ssh_key_f10,ssh_key_f11,ssh_key_f12;
     private Button ssh_key_esc,ssh_key_alt,ssh_key_ctrl,ssh_key_tab,ssh_key_left,ssh_key_right,ssh_key_up,ssh_key_down,ssh_key_sp_1,ssh_key_sp_2,ssh_key_sp_3,ssh_key_sp_4,ssh_key_sp_5,ssh_key_sp_6,ssh_key_sp_7,ssh_key_sp_8,ssh_key_sp_9,ssh_key_sp_10,ssh_key_sp_11,ssh_key_sp_12,ssh_key_sp_13,ssh_key_sp_14;
     private int ctrl,alt;
-    private SSHKeyListener connectedkeyListener;
-    private View.OnKeyListener unConnectedKeyListener;
+    private SSHKeyListener keyListener;
     private AlertDialog.Builder connectFailDialog,inputIPAndPortDialog;
     private RelativeLayout rl_keyboard;
     private CharsetDecoder decoder;
@@ -72,13 +67,12 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
         initView();
         initData();
         setLisetener();
-        inputIpAndPort();
-        inputUserNameAndPassword();
+        input();
         super.onCreate(savedInstanceState);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void inputIpAndPort() {
+    private void input() {
         final View view = View.inflate(this,R.layout.input_ip_port_layout,null);
         inputIPAndPortDialog = new AlertDialog.Builder(this);
         inputIPAndPortDialog.setCancelable(false);
@@ -92,20 +86,15 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                 ip = et_ip.getText().toString();
                 EditText et_port = (EditText) view.findViewById(R.id.et_port);
                 port = Integer.parseInt(et_port.getText().toString());
-                sshView.clearTextView();
-                sshView.setDisPlayUsername("请输入用户名：");
+                EditText et_username = (EditText) view.findViewById(R.id.et_username);
+                username = et_username.getText().toString();
+                EditText et_password = (EditText) view.findViewById(R.id.et_password);
+                password = et_password.getText().toString();
+                startConnect(username,password);
             }
         });
+        inputIPAndPortDialog.show();
     }
-
-    /**
-     * 输入用户名和密码
-     */
-    private void inputUserNameAndPassword() {
-        sshView.setDisPlayUsername("请输入用户名：");
-
-    }
-
     /**
      * 开始连接SSH
      */
@@ -122,50 +111,8 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 
     private void initData(){
         decoder = Charset.forName("utf-8").newDecoder();
-//        ip = getArguments().getString(BUNDLE_SSH_IP);
-//        port = getArguments().getInt(BUNDLE_SSH_PORT);
-        connectedkeyListener = new SSHKeyListener(this,sshView.buffer,"utf-8");
-//        connectedkeyListener.setOnClearListener(new SSHKeyListener.OnClearListener() {
-//            @Override
-//            public void onClear() {
-//                clearState();
-//            }
-//        });
-
-        unConnectedKeyListener = new View.OnKeyListener() {
-
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(KeyEvent.ACTION_UP == event.getAction()){
-                    if(event.getKeyCode()>=7&&event.getKeyCode()<=16){
-                        //数字键0-9
-                        if(sshView.lineCount == 1){
-                            sshView.username.append((event.getKeyCode()-7)+"");
-                            sshView.addDisPlayString(sshView.username.toString());
-                        }else if(sshView.lineCount == 2){
-                            sshView.password.append((event.getKeyCode()-7)+"");
-                            sshView.addDisPlayString(sshView.password.toString());
-                        }
-                    }
-
-                    if(event.getKeyCode() == 67){
-                        //退格键
-                        sshView.deleteDisPlayChar();
-                    }
-                    if(event.getKeyCode() == 66){
-                        //回车键
-                        if(sshView.lineCount==1){
-                            sshView.setDisPlayPassword("请输入密码：");
-                        }else if(sshView.lineCount==2){
-                            sshView.setDisPlayPassword("正在连接...");
-                            startConnect(sshView.username.toString(),sshView.password.toString());
-                        }
-                    }
-                }
-                return false;
-            }
-        };
-        imm = (InputMethodManager) mView.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyListener = new SSHKeyListener(this,sshView.buffer,"utf-8");
+        imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
         handler = new Handler() {
             @Override
@@ -187,26 +134,26 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
         };
     }
 
-    private void clearState(){
-        if(ctrl==1) {
-            clearCtrl();
-            showSoftInput();
-        }
-        if(alt==1) {
-            clearAlt();
-            showSoftInput();
-        }
-
-    }
+//    private void clearState(){
+//        if(ctrl==1) {
+//            clearCtrl();
+//            showSoftInput();
+//        }
+//        if(alt==1) {
+//            clearAlt();
+//            showSoftInput();
+//        }
+//
+//    }
 
     private void clearCtrl(){
         ctrl=0;
-        ssh_key_ctrl.setBackgroundDrawable(getResources().getDrawable(R.mipmap.keyboard_nomal));
+        ssh_key_ctrl.setBackgroundDrawable(getResources().getDrawable(R.drawable.keyboard_nomal));
         ssh_key_ctrl.setTextColor(Color.parseColor("#000000"));
     }
     private void clearAlt(){
         alt=0;
-        ssh_key_alt.setBackgroundDrawable(getResources().getDrawable(R.mipmap.keyboard_nomal));
+        ssh_key_alt.setBackgroundDrawable(getResources().getDrawable(R.drawable.keyboard_nomal));
         ssh_key_alt.setTextColor(Color.parseColor("#000000"));
     }
 
@@ -227,25 +174,25 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                sshView.clearTextView();
-                sshView.setDisPlayUsername("请输入用户名：");
+
+//                inputIPAndPortDialog.show();
             }
         });
-        sshView = (SSHView) mView.findViewById(R.id.ssh_view);
-        rl_keyboard = (RelativeLayout) mView.findViewById(R.id.rl_keyboard);
+        sshView = (SSHView) findViewById(R.id.ssh_view);
+        rl_keyboard = (RelativeLayout) findViewById(R.id.rl_keyboard);
 //      ll_ssh_keyboard = (LinearLayout)findViewById(R.id.ll_ssh_keyboard);
-        ssh_key_f1 = (Button) mView.findViewById(R.id.ssh_key_f1);
-        ssh_key_f2 = (Button) mView.findViewById(R.id.ssh_key_f2);
-        ssh_key_f3 = (Button) mView.findViewById(R.id.ssh_key_f3);
-        ssh_key_f4 = (Button) mView.findViewById(R.id.ssh_key_f4);
-        ssh_key_f5 = (Button) mView.findViewById(R.id.ssh_key_f5);
-        ssh_key_f6 = (Button) mView.findViewById(R.id.ssh_key_f6);
-        ssh_key_f7 = (Button) mView.findViewById(R.id.ssh_key_f7);
-        ssh_key_f8 = (Button) mView.findViewById(R.id.ssh_key_f8);
-        ssh_key_f9 = (Button) mView.findViewById(R.id.ssh_key_f9);
-        ssh_key_f10 = (Button) mView.findViewById(R.id.ssh_key_f10);
-        ssh_key_f11 = (Button) mView.findViewById(R.id.ssh_key_f11);
-        ssh_key_f12 = (Button) mView.findViewById(R.id.ssh_key_f12);
+        ssh_key_f1 = (Button) findViewById(R.id.ssh_key_f1);
+        ssh_key_f2 = (Button) findViewById(R.id.ssh_key_f2);
+        ssh_key_f3 = (Button)findViewById(R.id.ssh_key_f3);
+        ssh_key_f4 = (Button) findViewById(R.id.ssh_key_f4);
+        ssh_key_f5 = (Button) findViewById(R.id.ssh_key_f5);
+        ssh_key_f6 = (Button)findViewById(R.id.ssh_key_f6);
+        ssh_key_f7 = (Button) findViewById(R.id.ssh_key_f7);
+        ssh_key_f8 = (Button) findViewById(R.id.ssh_key_f8);
+        ssh_key_f9 = (Button) findViewById(R.id.ssh_key_f9);
+        ssh_key_f10 = (Button) findViewById(R.id.ssh_key_f10);
+        ssh_key_f11 = (Button) findViewById(R.id.ssh_key_f11);
+        ssh_key_f12 = (Button) findViewById(R.id.ssh_key_f12);
 
         ssh_key_f1.setOnClickListener(this);
         ssh_key_f2.setOnClickListener(this);
@@ -260,28 +207,28 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
         ssh_key_f11.setOnClickListener(this);
         ssh_key_f12.setOnClickListener(this);
 
-        ssh_key_esc = (Button) mView.findViewById(R.id.ssh_key_esc);
-        ssh_key_alt = (Button) mView.findViewById(R.id.ssh_key_alt);
-        ssh_key_ctrl = (Button) mView.findViewById(R.id.ssh_key_ctrl);
-        ssh_key_tab = (Button) mView.findViewById(R.id.ssh_key_tab);
-        ssh_key_left = (Button) mView.findViewById(R.id.ssh_key_left);
-        ssh_key_right = (Button) mView.findViewById(R.id.ssh_key_right);
-        ssh_key_up = (Button) mView.findViewById(R.id.ssh_key_up);
-        ssh_key_down = (Button) mView.findViewById(R.id.ssh_key_down);
-        ssh_key_sp_1 = (Button) mView.findViewById(R.id.ssh_key_sp_1);
-        ssh_key_sp_2 = (Button) mView.findViewById(R.id.ssh_key_sp_2);
-        ssh_key_sp_3 = (Button) mView.findViewById(R.id.ssh_key_sp_3);
-        ssh_key_sp_4 = (Button) mView.findViewById(R.id.ssh_key_sp_4);
-        ssh_key_sp_5 = (Button) mView.findViewById(R.id.ssh_key_sp_5);
-        ssh_key_sp_6 = (Button) mView.findViewById(R.id.ssh_key_sp_6);
-        ssh_key_sp_7 = (Button) mView.findViewById(R.id.ssh_key_sp_7);
-        ssh_key_sp_8 = (Button) mView.findViewById(R.id.ssh_key_sp_8);
-        ssh_key_sp_9 = (Button) mView.findViewById(R.id.ssh_key_sp_9);
-        ssh_key_sp_10 = (Button) mView.findViewById(R.id.ssh_key_sp_10);
-        ssh_key_sp_11 = (Button) mView.findViewById(R.id.ssh_key_sp_11);
-        ssh_key_sp_12 = (Button) mView.findViewById(R.id.ssh_key_sp_12);
-        ssh_key_sp_13 = (Button) mView.findViewById(R.id.ssh_key_sp_13);
-        ssh_key_sp_14 = (Button) mView.findViewById(R.id.ssh_key_sp_14);
+        ssh_key_esc = (Button) findViewById(R.id.ssh_key_esc);
+        ssh_key_alt = (Button) findViewById(R.id.ssh_key_alt);
+        ssh_key_ctrl = (Button) findViewById(R.id.ssh_key_ctrl);
+        ssh_key_tab = (Button) findViewById(R.id.ssh_key_tab);
+        ssh_key_left = (Button) findViewById(R.id.ssh_key_left);
+        ssh_key_right = (Button) findViewById(R.id.ssh_key_right);
+        ssh_key_up = (Button) findViewById(R.id.ssh_key_up);
+        ssh_key_down = (Button) findViewById(R.id.ssh_key_down);
+        ssh_key_sp_1 = (Button) findViewById(R.id.ssh_key_sp_1);
+        ssh_key_sp_2 = (Button) findViewById(R.id.ssh_key_sp_2);
+        ssh_key_sp_3 = (Button) findViewById(R.id.ssh_key_sp_3);
+        ssh_key_sp_4 = (Button) findViewById(R.id.ssh_key_sp_4);
+        ssh_key_sp_5 = (Button) findViewById(R.id.ssh_key_sp_5);
+        ssh_key_sp_6 = (Button) findViewById(R.id.ssh_key_sp_6);
+        ssh_key_sp_7 = (Button) findViewById(R.id.ssh_key_sp_7);
+        ssh_key_sp_8 = (Button) findViewById(R.id.ssh_key_sp_8);
+        ssh_key_sp_9 = (Button) findViewById(R.id.ssh_key_sp_9);
+        ssh_key_sp_10 = (Button) findViewById(R.id.ssh_key_sp_10);
+        ssh_key_sp_11 = (Button) findViewById(R.id.ssh_key_sp_11);
+        ssh_key_sp_12 = (Button) findViewById(R.id.ssh_key_sp_12);
+        ssh_key_sp_13 = (Button) findViewById(R.id.ssh_key_sp_13);
+        ssh_key_sp_14 = (Button) findViewById(R.id.ssh_key_sp_14);
 
         ssh_key_esc.setOnClickListener(this);
         ssh_key_alt.setOnClickListener(this);
@@ -334,14 +281,14 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
     }
 
     private void setLisetener() {
-        mView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        getCurrentFocus().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 Rect r = new Rect();
-                mView.getWindowVisibleDisplayFrame(r);
+                getCurrentFocus().getWindowVisibleDisplayFrame(r);
                 rl_keyboard.getHeight();
 
-                int screenHeight = mView.getRootView().getHeight();
+                int screenHeight = getCurrentFocus().getRootView().getHeight();
                 int heightDifference = screenHeight - (r.bottom - r.top);
                 if(heightDifference != 0){
                     if(sshView.isCursorDown()){
@@ -363,8 +310,6 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
             }
         });
         sshView.setOnInputTextListener(this);
-
-        sshView.setOnKeyListener(unConnectedKeyListener);
     }
 
     //显示软键盘
@@ -389,43 +334,43 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ssh_key_f1:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F1);
+                keyListener.sendPressedKey(vt320.KEY_F1);
                 break;
             case R.id.ssh_key_f2:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F2);
+                keyListener.sendPressedKey(vt320.KEY_F2);
                 break;
             case R.id.ssh_key_f3:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F3);
+                keyListener.sendPressedKey(vt320.KEY_F3);
                 break;
             case R.id.ssh_key_f4:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F4);
+                keyListener.sendPressedKey(vt320.KEY_F4);
                 break;
             case R.id.ssh_key_f5:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F5);
+                keyListener.sendPressedKey(vt320.KEY_F5);
                 break;
             case R.id.ssh_key_f6:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F6);
+                keyListener.sendPressedKey(vt320.KEY_F6);
                 break;
             case R.id.ssh_key_f7:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F7);
+                keyListener.sendPressedKey(vt320.KEY_F7);
                 break;
             case R.id.ssh_key_f8:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F8);
+                keyListener.sendPressedKey(vt320.KEY_F8);
                 break;
             case R.id.ssh_key_f9:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F9);
+                keyListener.sendPressedKey(vt320.KEY_F9);
                 break;
             case R.id.ssh_key_f10:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F10);
+                keyListener.sendPressedKey(vt320.KEY_F10);
                 break;
             case R.id.ssh_key_f11:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F11);
+                keyListener.sendPressedKey(vt320.KEY_F11);
                 break;
             case R.id.ssh_key_f12:
-                connectedkeyListener.sendPressedKey(vt320.KEY_F12);
+                keyListener.sendPressedKey(vt320.KEY_F12);
                 break;
             case R.id.ssh_key_esc:
-                connectedkeyListener.sendEscape();
+                keyListener.sendEscape();
                 break;
             case R.id.ssh_key_alt:
                 if(alt<2){
@@ -433,10 +378,9 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                 }else{
                     alt=0;
                 }
-//	                connectedkeyListener.metaPress(SSHKeyListener.OUR_ALT_ON, true);
                 switch (alt){
                     case 0:
-                        ssh_key_alt.setBackgroundDrawable(getResources().getDrawable(R.mipmap.keyboard_nomal));
+                        ssh_key_alt.setBackgroundDrawable(getResources().getDrawable(R.drawable.keyboard_nomal));
                         if(ctrl==0){
                             showSoftInput();
                         }
@@ -457,10 +401,9 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                 }else{
                     ctrl=0;
                 }
-//	                connectedkeyListener.metaPress(SSHKeyListener.OUR_CTRL_ON, true);
                 switch (ctrl){
                     case 0:
-                        ssh_key_ctrl.setBackgroundDrawable(getResources().getDrawable(R.mipmap.keyboard_nomal));
+                        ssh_key_ctrl.setBackgroundDrawable(getResources().getDrawable(R.drawable.keyboard_nomal));
                         if(alt==0){
                             showSoftInput();
                         }
@@ -477,19 +420,19 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                 break;
 
             case R.id.ssh_key_tab:
-                connectedkeyListener.sendTab();
+                keyListener.sendTab();
                 break;
             case R.id.ssh_key_left:
-                connectedkeyListener.sendPressedKey(vt320.KEY_LEFT);
+                keyListener.sendPressedKey(vt320.KEY_LEFT);
                 break;
             case R.id.ssh_key_right:
-                connectedkeyListener.sendPressedKey(vt320.KEY_RIGHT);
+                keyListener.sendPressedKey(vt320.KEY_RIGHT);
                 break;
             case R.id.ssh_key_up:
-                connectedkeyListener.sendPressedKey(vt320.KEY_UP);
+                keyListener.sendPressedKey(vt320.KEY_UP);
                 break;
             case R.id.ssh_key_down:
-                connectedkeyListener.sendPressedKey(vt320.KEY_DOWN);
+                keyListener.sendPressedKey(vt320.KEY_DOWN);
                 break;
 
             case R.id.ssh_key_sp_1:
@@ -641,14 +584,14 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
             channel.setAgentForwarding(true);
             channel.setPty(true);
             channel.setPtyType("xterm");
-            channel.setPtySize(SSHView.WIDTH_COUNT, SSHView.HEIGHT_COUNT, UIUtils.getScreenWidth(mView.getContext()), UIUtils.getScreenHeight(mView.getContext()));
+            channel.setPtySize(SSHView.WIDTH_COUNT, SSHView.HEIGHT_COUNT, UIUtils.getScreenWidth(this), UIUtils.getScreenHeight(this));
             //获取输入流和输出流
             channel.connect(1000);
             sshView.isConnected = true;
             instream = channel.getInputStream();
 
             outstream = channel.getOutputStream();
-            sshView.setOnKeyListener(connectedkeyListener);
+            sshView.setOnKeyListener(keyListener);
 
             try {
                 ByteBuffer byteBuffer;

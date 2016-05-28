@@ -5,6 +5,7 @@
         android:typeface="monospace"
         android:singleLine="true"
         android:textSize="14dp"
+        android:textColor="#ffffff"
         android:id="@+id/tv_ssh"/>
 
 
