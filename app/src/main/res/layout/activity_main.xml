@@ -43,254 +43,254 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingRight="55dp" >
+                    android:paddingRight="5dp" >
 
                     <Button
                         android:id="@+id/ssh_key_esc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/keyboard_nomal" />
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
+                        android:background="@drawable/keyboard_nomal"/>
 
                     <Button
                         android:id="@+id/ssh_key_alt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_ctrl"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
 
                     <Button
                         android:id="@+id/ssh_key_tab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_up"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_down"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_left"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_right"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_12"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_13"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_14"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_sp_11"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal" />
 
                     <Button
                         android:id="@+id/ssh_key_f1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F1" />
 
                     <Button
                         android:id="@+id/ssh_key_f2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F2" />
 
                     <Button
                         android:id="@+id/ssh_key_f3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F3" />
 
                     <Button
                         android:id="@+id/ssh_key_f4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F4" />
 
                     <Button
                         android:id="@+id/ssh_key_f5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F5" />
 
                     <Button
                         android:id="@+id/ssh_key_f6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F6" />
 
                     <Button
                         android:id="@+id/ssh_key_f7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F7" />
 
                     <Button
                         android:id="@+id/ssh_key_f8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F8" />
 
                     <Button
                         android:id="@+id/ssh_key_f9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F9" />
 
                     <Button
                         android:id="@+id/ssh_key_f10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F10" />
 
                     <Button
                         android:id="@+id/ssh_key_f11"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F11" />
 
                     <Button
                         android:id="@+id/ssh_key_f12"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="54dp"
+                        android:layout_height="39dp"
                         android:layout_marginLeft="5dp"
                         android:background="@drawable/keyboard_nomal"
                         android:text="F12" />

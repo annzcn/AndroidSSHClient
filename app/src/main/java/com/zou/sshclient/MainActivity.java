@@ -174,8 +174,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-
-//                inputIPAndPortDialog.show();
+                input();
             }
         });
         sshView = (SSHView) findViewById(R.id.ssh_view);
@@ -322,12 +321,18 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
     }
 
     @Override
-    public void onInputText(String text) {
-        try {
-            sshShell(text);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void onInputText(final String text) {
+        new Thread(){
+            @Override
+            public void run() {
+                try {
+                    sshShell(text);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                super.run();
+            }
+        }.start();
     }
 
     @Override
