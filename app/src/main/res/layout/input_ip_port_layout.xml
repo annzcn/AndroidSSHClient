@@ -16,7 +16,6 @@
 
         <EditText
             android:id="@+id/et_ip"
-            android:text="192.168.10.128"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -35,8 +34,7 @@
         <EditText
             android:id="@+id/et_port"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="22"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -53,8 +51,7 @@
         <EditText
             android:id="@+id/et_username"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="zou"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -71,8 +68,7 @@
         <EditText
             android:id="@+id/et_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="63108412"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </LinearLayout>

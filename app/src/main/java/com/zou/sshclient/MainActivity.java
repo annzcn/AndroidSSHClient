@@ -1,5 +1,4 @@
 package com.zou.sshclient;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -36,10 +34,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 
-public class MainActivity extends Activity implements View.OnClickListener,SSHView.OnInputTextListener{
-    private static final String TAG ="RemoteSSHUI" ;
-    private String ip,username,password;
-    private int port;
+public class MainActivity extends Activity implements View.OnClickListener, SSHView.OnInputTextListener {
+    private static final String TAG = "RemoteSSHUI";
     private SSHView sshView;
     private Session session = null;
     private ChannelShell channel = null;
@@ -52,13 +48,14 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
     public static final int MSG_CONNECTED = 2;
     private static final int BUFFER_SIZE = 4096;
     private InputMethodManager imm;
-    private Button ssh_key_f1,ssh_key_f2,ssh_key_f3,ssh_key_f4,ssh_key_f5,ssh_key_f6,ssh_key_f7,ssh_key_f8,ssh_key_f9,ssh_key_f10,ssh_key_f11,ssh_key_f12;
-    private Button ssh_key_esc,ssh_key_alt,ssh_key_ctrl,ssh_key_tab,ssh_key_left,ssh_key_right,ssh_key_up,ssh_key_down,ssh_key_sp_1,ssh_key_sp_2,ssh_key_sp_3,ssh_key_sp_4,ssh_key_sp_5,ssh_key_sp_6,ssh_key_sp_7,ssh_key_sp_8,ssh_key_sp_9,ssh_key_sp_10,ssh_key_sp_11,ssh_key_sp_12,ssh_key_sp_13,ssh_key_sp_14;
-    private int ctrl,alt;
+    private Button ssh_key_f1, ssh_key_f2, ssh_key_f3, ssh_key_f4, ssh_key_f5, ssh_key_f6, ssh_key_f7, ssh_key_f8, ssh_key_f9, ssh_key_f10, ssh_key_f11, ssh_key_f12;
+    private Button ssh_key_esc, ssh_key_alt, ssh_key_ctrl, ssh_key_tab, ssh_key_left, ssh_key_right, ssh_key_up, ssh_key_down, ssh_key_sp_1, ssh_key_sp_2, ssh_key_sp_3, ssh_key_sp_4, ssh_key_sp_5, ssh_key_sp_6, ssh_key_sp_7, ssh_key_sp_8, ssh_key_sp_9, ssh_key_sp_10, ssh_key_sp_11, ssh_key_sp_12, ssh_key_sp_13, ssh_key_sp_14;
+    private int ctrl, alt;
     private SSHKeyListener keyListener;
-    private AlertDialog.Builder connectFailDialog,inputIPAndPortDialog;
+    private AlertDialog.Builder connectFailDialog, inputIPAndPortDialog;
     private RelativeLayout rl_keyboard;
     private CharsetDecoder decoder;
+
 
 
     @Override
@@ -73,7 +70,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void input() {
-        final View view = View.inflate(this,R.layout.input_ip_port_layout,null);
+        final View view = View.inflate(this, R.layout.input_ip_port_layout, null);
         inputIPAndPortDialog = new AlertDialog.Builder(this);
         inputIPAndPortDialog.setCancelable(false);
         inputIPAndPortDialog.setTitle("请输入IP和端口");
@@ -83,22 +80,23 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 EditText et_ip = (EditText) view.findViewById(R.id.et_ip);
-                ip = et_ip.getText().toString();
+                String ip = et_ip.getText().toString();
                 EditText et_port = (EditText) view.findViewById(R.id.et_port);
-                port = Integer.parseInt(et_port.getText().toString());
+                int port = Integer.parseInt(et_port.getText().toString());
                 EditText et_username = (EditText) view.findViewById(R.id.et_username);
-                username = et_username.getText().toString();
+                String username = et_username.getText().toString();
                 EditText et_password = (EditText) view.findViewById(R.id.et_password);
-                password = et_password.getText().toString();
-                startConnect(username,password);
+                String password = et_password.getText().toString();
+                startConnect(ip,username,password,port);
             }
         });
         inputIPAndPortDialog.show();
     }
+
     /**
      * 开始连接SSH
      */
-    private void startConnect(final String username ,final String password) {
+    private void startConnect(final String ip, final String username, final String password, final int port) {
         ThreadPoolManage.ThreadPool pool = ThreadPoolManage.getShortPool();
         pool.execute(new Runnable() {
 
@@ -109,10 +107,10 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
         });
     }
 
-    private void initData(){
+    private void initData() {
         decoder = Charset.forName("utf-8").newDecoder();
-        keyListener = new SSHKeyListener(this,sshView.buffer,"utf-8");
-        imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyListener = new SSHKeyListener(this, sshView.buffer, "utf-8");
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         handler = new Handler() {
             @Override
@@ -120,7 +118,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                 switch (msg.what) {
                     case MSG_ADD_TEXT:
 
-                        sshView.addString((String)msg.obj);
+                        sshView.addString((String) msg.obj);
                         break;
                     case MSG_CONNECT_FAIL:
                         connectFailDialog.show();
@@ -146,13 +144,14 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 //
 //    }
 
-    private void clearCtrl(){
-        ctrl=0;
+    private void clearCtrl() {
+        ctrl = 0;
         ssh_key_ctrl.setBackgroundDrawable(getResources().getDrawable(R.drawable.keyboard_nomal));
         ssh_key_ctrl.setTextColor(Color.parseColor("#000000"));
     }
-    private void clearAlt(){
-        alt=0;
+
+    private void clearAlt() {
+        alt = 0;
         ssh_key_alt.setBackgroundDrawable(getResources().getDrawable(R.drawable.keyboard_nomal));
         ssh_key_alt.setTextColor(Color.parseColor("#000000"));
     }
@@ -182,10 +181,10 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 //      ll_ssh_keyboard = (LinearLayout)findViewById(R.id.ll_ssh_keyboard);
         ssh_key_f1 = (Button) findViewById(R.id.ssh_key_f1);
         ssh_key_f2 = (Button) findViewById(R.id.ssh_key_f2);
-        ssh_key_f3 = (Button)findViewById(R.id.ssh_key_f3);
+        ssh_key_f3 = (Button) findViewById(R.id.ssh_key_f3);
         ssh_key_f4 = (Button) findViewById(R.id.ssh_key_f4);
         ssh_key_f5 = (Button) findViewById(R.id.ssh_key_f5);
-        ssh_key_f6 = (Button)findViewById(R.id.ssh_key_f6);
+        ssh_key_f6 = (Button) findViewById(R.id.ssh_key_f6);
         ssh_key_f7 = (Button) findViewById(R.id.ssh_key_f7);
         ssh_key_f8 = (Button) findViewById(R.id.ssh_key_f8);
         ssh_key_f9 = (Button) findViewById(R.id.ssh_key_f9);
@@ -253,8 +252,6 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
         ssh_key_sp_14.setOnClickListener(this);
 
 
-
-
         ssh_key_esc.setText("Esc");
         ssh_key_alt.setText("Alt");
         ssh_key_ctrl.setText("Ctrl");
@@ -289,8 +286,8 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 
                 int screenHeight = getCurrentFocus().getRootView().getHeight();
                 int heightDifference = screenHeight - (r.bottom - r.top);
-                if(heightDifference != 0){
-                    if(sshView.isCursorDown()){
+                if (heightDifference != 0) {
+                    if (sshView.isCursorDown()) {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -316,13 +313,13 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
         imm.showSoftInput(sshView, InputMethodManager.SHOW_FORCED);
     }
 
-    public void hideSoftInput(){
+    public void hideSoftInput() {
         imm.hideSoftInputFromWindow(sshView.getWindowToken(), 0);
     }
 
     @Override
     public void onInputText(final String text) {
-        new Thread(){
+        new Thread() {
             @Override
             public void run() {
                 try {
@@ -337,7 +334,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ssh_key_f1:
                 keyListener.sendPressedKey(vt320.KEY_F1);
                 break;
@@ -378,15 +375,15 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                 keyListener.sendEscape();
                 break;
             case R.id.ssh_key_alt:
-                if(alt<2){
+                if (alt < 2) {
                     alt++;
-                }else{
-                    alt=0;
+                } else {
+                    alt = 0;
                 }
-                switch (alt){
+                switch (alt) {
                     case 0:
                         ssh_key_alt.setBackgroundDrawable(getResources().getDrawable(R.drawable.keyboard_nomal));
-                        if(ctrl==0){
+                        if (ctrl == 0) {
                             showSoftInput();
                         }
                         break;
@@ -401,15 +398,15 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                 }
                 break;
             case R.id.ssh_key_ctrl:
-                if(ctrl<2){
+                if (ctrl < 2) {
                     ctrl++;
-                }else{
-                    ctrl=0;
+                } else {
+                    ctrl = 0;
                 }
-                switch (ctrl){
+                switch (ctrl) {
                     case 0:
                         ssh_key_ctrl.setBackgroundDrawable(getResources().getDrawable(R.drawable.keyboard_nomal));
-                        if(alt==0){
+                        if (alt == 0) {
                             showSoftInput();
                         }
                         break;
@@ -579,7 +576,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
             session.setConfig("PreferredAuthentications", "publickey,keyboard-interactive,password");
             //设置登陆超时时间
             session.connect(30000);
-            Message msg =Message.obtain(handler);
+            Message msg = Message.obtain(handler);
             msg.what = MSG_CONNECTED;
             msg.sendToTarget();
 
@@ -621,7 +618,6 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                 EastAsianWidth measurer = EastAsianWidth.getInstance();
 
 
-
 //        int len = 0;
 //        byte[] bs = new byte[BUFFER_SIZE];
                 while (true) {
@@ -629,7 +625,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                     bytesToRead = byteBuffer.capacity() - byteBuffer.limit();
                     offset = byteBuffer.arrayOffset() + byteBuffer.limit();
                     bytesRead = instream.read(byteArray, offset, bytesToRead);
-                    if(bytesRead>0){
+                    if (bytesRead > 0) {
                         byteBuffer.limit(byteBuffer.limit() + bytesRead);
 
                         synchronized (this) {
@@ -664,7 +660,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
             msg.what = MSG_CONNECT_FAIL;
             msg.sendToTarget();
             e.printStackTrace();
-        }finally{
+        } finally {
 
         }
     }
@@ -682,7 +678,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 //				   }
 //				   cmd = buf.toString();
                 Log.i(TAG, "----------------------source string write: ----------------start");
-                Log.i(TAG, "cmd.getBytes "+cmd);
+                Log.i(TAG, "cmd.getBytes " + cmd);
                 outstream.write(cmd.getBytes("utf-8"));
                 outstream.flush();
                 Log.i(TAG, "----------------------source string write: ----------------start");
@@ -695,7 +691,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
 
     @Override
     public void onDestroy() {
-        if(jsch!=null){
+        if (jsch != null) {
             try {
                 jsch.removeAllIdentity();
                 jsch = null;
@@ -703,7 +699,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                 e1.printStackTrace();
             }
         }
-        if(instream!=null){
+        if (instream != null) {
             try {
                 instream.close();
                 instream = null;
@@ -711,7 +707,7 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                 e.printStackTrace();
             }
         }
-        if(outstream!=null){
+        if (outstream != null) {
             try {
                 outstream.close();
                 outstream = null;
@@ -719,15 +715,26 @@ public class MainActivity extends Activity implements View.OnClickListener,SSHVi
                 e.printStackTrace();
             }
         }
-        if(session!=null&&session.isConnected()){
+        if (session != null && session.isConnected()) {
             session.disconnect();
             session = null;
         }
-        if(channel!=null&&channel.isConnected()){
+        if (channel != null && channel.isConnected()) {
             channel.disconnect();
             channel = null;
         }
         System.gc();
         super.onDestroy();
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
     }
 }
